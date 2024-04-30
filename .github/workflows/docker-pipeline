@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main
+      - docker-build
 
 jobs:
   build-and-push:
@@ -11,7 +11,7 @@ jobs:
     
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       
     - name: Login to Docker Hub
       uses: docker/login-action@v2
@@ -20,5 +20,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     
     - name: Build Docker Image
-      run: docker build -t your-docker-username/your-image-name:latest .
-szp-rvfk-ebt
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE }}:${{ secrets.LATEST }} .
+
+    - name: Push Docker image to Docker Hub
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE }}:${{ secrets.LATEST }}
